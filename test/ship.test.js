@@ -17,6 +17,5 @@ test('Check if battleship has sunk', () => {
     createShip.hit();
     createShip.hit();
     expect(createShip.isSunk()).toBe(true);
-
 })
 
