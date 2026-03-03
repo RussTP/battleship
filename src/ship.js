@@ -18,5 +18,4 @@ isSunk() {
 
 }
 
-
 module.exports = Ship;
