@@ -6,6 +6,8 @@ class Gameboard {
         this.cols = 10;
         this.grid = this.createBoard();
         this.placement = [];
+        this.hit = [];
+        this.miss = [];
 
         this.ship = {
             carrier: new Ship(5),
@@ -41,10 +43,23 @@ class Gameboard {
         return this.placement
  }
 
+    receiveAttack(row, col) {
+     const entry = this.placement.find(entry => entry.cells.some(cell => cell[0] === row && cell[1] === col))
+     if (entry === undefined) {
+         this.miss.push([row, col])
+         return
+     }
+     this.hit.push({ ship: entry.ship, cell: [row, col] })
+     this.ship[entry.ship].hit();
+     return this.placement
+    }
     
-    receiveAttack() {
+    allSunk() {
+        const ships = Object.values(this.ship);
+        return ships.every((ship) => ship.isSunk() === true); 
 
     }
+  
 }
 
 module.exports = Gameboard;
