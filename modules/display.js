@@ -1,17 +1,22 @@
 export default class Display {
     
-    render(player) {
-        const displayBoard = document.querySelector('#player-board');
-        const grid = player.gameboard.grid;
-        
-        grid.forEach(row => {
+    renderBoard(grid, boardElement) {
+         grid.forEach(row => {
             row.forEach(cell => {
             const cellDiv = document.createElement('div');
             cellDiv.classList.add('cell');
-            displayBoard.appendChild(cellDiv);
+            boardElement.appendChild(cellDiv);
             });
          });
      }
+
+    render(player) {
+        const playerBoard = document.querySelector('#player-board');
+        const cpuBoard = document.querySelector('#cpu-board');
+
+        this.renderBoard(player.personBoard.grid, playerBoard);
+        this.renderBoard(player.cpuBoard.grid, cpuBoard);
+    }
 }
 
 
