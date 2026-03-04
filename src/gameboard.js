@@ -1,6 +1,6 @@
-import Ship from "./ship";
+import Ship from './ship.js';
 
-class Gameboard {
+export default class Gameboard {
     constructor() {
         this.rows = 10;
         this.cols = 10;
@@ -62,4 +62,3 @@ class Gameboard {
   
 }
 
-module.exports = Gameboard;

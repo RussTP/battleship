@@ -1,4 +1,4 @@
-const Player = require('../src/player');
+import Player from '../src/player.js';
 
 test('person and computer have a gameboard', () => {
     const createBoard = new Player();

@@ -1,4 +1,4 @@
-const Gameboard = require('../src/gameboard');
+import Gameboard from '../src/gameboard.js';
 
 test('create gameboard 10x10 grid', () => {
     const board = new Gameboard();
