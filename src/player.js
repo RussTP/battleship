@@ -4,6 +4,7 @@ export default class Player {
     constructor(){
         this.personBoard = new Gameboard();
         this.cpuBoard = new Gameboard();
+        this.currentTurn = 'player';
     }
 
 pcAttack() {
