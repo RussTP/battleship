@@ -2,7 +2,8 @@ import Player from '../src/player.js';
 
 test('person and computer have a gameboard', () => {
     const createBoard = new Player();
-    expect(createBoard.gameboard).toBeDefined();
+    expect(createBoard.personBoard).toBeDefined();
+    expect(createBoard.cpuBoard).toBeDefined();
 }) 
 
 test('computer random attack', () => {
