@@ -20,31 +20,42 @@ export default class Display {
 
 
      attackBoard(boardElement, gameboard, player) {
+            const controller = new AbortController(); 
+            let gameOver = false;
+
             boardElement.addEventListener('click', (e) => {
+            if (!e.target.dataset.row) return;
              console.log('clicked', e.target.dataset.row, e.target.dataset.col)
             const row = Number(e.target.dataset.row)
             const col = Number(e.target.dataset.col);
             gameboard.receiveAttack(row, col);
-            setTimeout(() => {
-                         if (player.personBoard.allSunk()) {
-            document.querySelector('#turn-display').textContent = 'CPU Wins'
-        } else {
-            document.querySelector('#turn-display').textContent = `Players turn`;
-        }
-            this.cpuTurn(player);
-            }, 1000);
 
-            if (player.cpuBoard.allSunk()) {
-            document.querySelector('#turn-display').textContent = 'Player Wins'
-            return;
-        } else {
-            document.querySelector('#turn-display').textContent = `CPU's turn`;
-        }
-
+            
             boardElement.innerHTML = '';
             this.renderBoard(gameboard.grid, gameboard.placement, boardElement);
             this.updateCells(boardElement, gameboard.hit, gameboard.miss);
-            });
+            
+
+            if (player.cpuBoard.allSunk()) {
+            document.querySelector('#turn-display').textContent = 'Player Wins'
+            gameOver = true;
+            controller.abort(); 
+            return;    
+        } 
+            document.querySelector('#turn-display').textContent = `CPU's turn`;
+                    
+            setTimeout(() => {
+             if(gameOver) return;
+             if (player.personBoard.allSunk()) {
+                document.querySelector('#turn-display').textContent = 'CPU Wins'
+                controller.abort(); 
+        } else {
+                document.querySelector('#turn-display').textContent = `Players turn`;
+        }
+                this.cpuTurn(player);
+           }, 1000);
+
+            }, {signal: controller.signal });
         }
 
              updateCells(boardElement, hits, miss) {
