@@ -6,15 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const newDisplay = new Display();
 
 
-    newPlayer.personBoard.placeShip('carrier', 0, 0, 'horizontal');
-    newPlayer.personBoard.placeShip('battleship', 2, 3, 'horizontal');
-    newPlayer.personBoard.placeShip('submarine', 9, 0, 'horizontal');
-    newPlayer.personBoard.placeShip('destroyer', 7, 4, 'horizontal');
-
-    newPlayer.cpuBoard.placeShip('carrier', 0, 0, 'horizontal');
-    newPlayer.cpuBoard.placeShip('battleship', 2, 3, 'horizontal');
-    newPlayer.cpuBoard.placeShip('submarine', 9, 0, 'horizontal');
-    newPlayer.cpuBoard.placeShip('destroyer', 7, 4, 'horizontal');
+    newPlayer.cpuBoard.randomShip(10, 'carrier');
+    newPlayer.cpuBoard.randomShip(10, 'battleship');
+    newPlayer.cpuBoard.randomShip(10, 'submarine');
+    newPlayer.cpuBoard.randomShip(10, 'destroyer');
 
     newPlayer.currentTurn
 

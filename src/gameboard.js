@@ -39,8 +39,44 @@ export default class Gameboard {
              cells.push([row + i, col])
         }
     }
-        this.placement.push({ ship: name, cells: cells })
-        return this.placement
+        const occupied = cells.some(newCell =>
+            this.placement.some(entry => 
+                entry.cells.some(existingCell => 
+                    existingCell[0] === newCell[0] && existingCell[1] === newCell[1]
+                )
+            )
+        );
+
+        if (occupied) return false;
+        this.placement.push({ship: name, cells: cells });
+        return this.placement;
+ }
+
+ reset() {
+        this.grid = this.createBoard();
+        this.placement = [];
+        this.hit = [];
+        this.miss = [];
+
+        this.ship = {
+            carrier: new Ship(5),
+            battleship: new Ship(4),
+            submarine: new Ship(3),
+            destroyer: new Ship(2)
+        };
+ }
+
+ randomShip(boardSize, name) {
+    while (true) {
+        const direction = ['horizontal', 'vertical'];
+        const ship = this.ship[name];
+        const row = Math.floor(Math.random() * (boardSize - ship.length + 1));
+        const col = Math.floor(Math.random() *(boardSize - ship.length + 1));
+        const randomDirection = Math.floor(Math.random() * direction.length);
+        const selectedDirection = direction[randomDirection];
+        const result = this.placeShip(name, row, col, selectedDirection)
+        if (result) break;
+    }
  }
 
     receiveAttack(row, col) {

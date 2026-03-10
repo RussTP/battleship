@@ -18,13 +18,30 @@ export default class Display {
          });
      }
 
+     randomShipBtn(player) {
+      const random = document.querySelector('#random-ship-btn');
+      random.addEventListener('click', () => {
+        player.personBoard.reset();
+        player.personBoard.randomShip(10, 'carrier');
+        player.personBoard.randomShip(10, 'battleship');
+        player.personBoard.randomShip(10, 'submarine');
+        player.personBoard.randomShip(10, 'destroyer');
+
+        const playerBoard = document.querySelector('#player-board')
+        playerBoard.innerHTML = '';
+        this.renderBoard(player.personBoard.grid, player.personBoard.placement, playerBoard)
+      })
+    }
 
      attackBoard(boardElement, gameboard, player) {
             const controller = new AbortController(); 
             let gameOver = false;
+            let isProcessing = false;
 
             boardElement.addEventListener('click', (e) => {
             if (!e.target.dataset.row) return;
+            if (isProcessing) return;
+            isProcessing = true;
              console.log('clicked', e.target.dataset.row, e.target.dataset.col)
             const row = Number(e.target.dataset.row)
             const col = Number(e.target.dataset.col);
@@ -51,8 +68,9 @@ export default class Display {
                 controller.abort(); 
         } else {
                 document.querySelector('#turn-display').textContent = `Players turn`;
+                 this.cpuTurn(player);
         }
-                this.cpuTurn(player);
+                isProcessing = false;
            }, 1000);
 
             }, {signal: controller.signal });
@@ -74,7 +92,6 @@ export default class Display {
 
     handleClick(player) {
             this.attackBoard(document.querySelector('#cpu-board'), player.cpuBoard, player);
-
         }
 
     cpuTurn(player) {
@@ -93,6 +110,7 @@ export default class Display {
         document.querySelector('#turn-display').textContent = 'Players turn';
         this.renderBoard(player.personBoard.grid, player.personBoard.placement, playerBoard);
         this.renderBoard(player.cpuBoard.grid, player.cpuBoard.placement, cpuBoard);
+        this.randomShipBtn(player);
         this.handleClick(player);
     
     }
