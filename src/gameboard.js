@@ -87,6 +87,7 @@ export default class Gameboard {
      }
      this.hit.push({ ship: entry.ship, cell: [row, col] })
      this.ship[entry.ship].hit();
+     if(this.ship[entry.ship].isSunk()) return entry.ship;
      return this.placement
     }
     

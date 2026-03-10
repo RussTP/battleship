@@ -1,6 +1,7 @@
 export default class Display {
+
     
-    renderBoard(grid, placement, boardElement) {
+    renderBoard(grid, placement, boardElement, hideShips = false) {
          grid.forEach((row, i) => {
             row.forEach((cell, j) => {
             const isShip = placement.find(entry =>
@@ -9,7 +10,7 @@ export default class Display {
             cellDiv.dataset.row = i;
             cellDiv.dataset.col = j;
             cellDiv.classList.add('cell');
-            if (isShip) {
+            if (isShip && !hideShips) {
              cellDiv.classList.add('ship')   
             }
             boardElement.appendChild(cellDiv);
@@ -45,16 +46,23 @@ export default class Display {
              console.log('clicked', e.target.dataset.row, e.target.dataset.col)
             const row = Number(e.target.dataset.row)
             const col = Number(e.target.dataset.col);
-            gameboard.receiveAttack(row, col);
+           
+            const result = gameboard.receiveAttack(row, col);
+            if (typeof result === 'string') {
+            const shipDiv = document.createElement('div');
+            shipDiv.classList.add('shipSunk')
+            shipDiv.textContent = `You sunk my ${result}!`
+            document.body.appendChild(shipDiv);
+            }
 
             
             boardElement.innerHTML = '';
-            this.renderBoard(gameboard.grid, gameboard.placement, boardElement);
+            this.renderBoard(gameboard.grid, gameboard.placement, boardElement, true);
             this.updateCells(boardElement, gameboard.hit, gameboard.miss);
             
 
             if (player.cpuBoard.allSunk()) {
-            document.querySelector('#turn-display').textContent = 'Player Wins'
+            document.querySelector('#turn-display').textContent = 'You Win!'
             gameOver = true;
             controller.abort(); 
             return;    
@@ -64,7 +72,7 @@ export default class Display {
             setTimeout(() => {
              if(gameOver) return;
              if (player.personBoard.allSunk()) {
-                document.querySelector('#turn-display').textContent = 'CPU Wins'
+                document.querySelector('#turn-display').textContent = 'You Lose!'
                 controller.abort(); 
         } else {
                 document.querySelector('#turn-display').textContent = `Players turn`;
@@ -103,15 +111,39 @@ export default class Display {
             this.updateCells(playerBoard, player.personBoard.hit, player.personBoard.miss);
         }
 
+        resetGame(player) {
+            const reset = document.querySelector('#reset-btn'); 
+                reset.addEventListener('click' , () => {
+                    player.personBoard.reset();
+                    player.cpuBoard.reset();                
+                    player.cpuBoard.randomShip(10, 'carrier');
+                    player.cpuBoard.randomShip(10, 'battleship');
+                    player.cpuBoard.randomShip(10, 'submarine');
+                    player.cpuBoard.randomShip(10, 'destroyer');
+
+                    const playerBoard = document.querySelector('#player-board');
+                    const cpuBoard = document.querySelector('#cpu-board');
+                    playerBoard.innerHTML = '';
+                    cpuBoard.innerHTML = '';
+
+                    this.renderBoard(player.personBoard.grid, player.personBoard.placement, playerBoard);
+                    this.renderBoard(player.cpuBoard.grid, player.cpuBoard.placement, cpuBoard, true);
+                    const AbortController = new AbortController(); 
+                    
+                })
+            }
+        
+
   
     render(player) {
         const playerBoard = document.querySelector('#player-board');
         const cpuBoard = document.querySelector('#cpu-board');
         document.querySelector('#turn-display').textContent = 'Players turn';
         this.renderBoard(player.personBoard.grid, player.personBoard.placement, playerBoard);
-        this.renderBoard(player.cpuBoard.grid, player.cpuBoard.placement, cpuBoard);
+        this.renderBoard(player.cpuBoard.grid, player.cpuBoard.placement, cpuBoard, true);
         this.randomShipBtn(player);
         this.handleClick(player);
+        this.resetGame(player);
     
     }
 }
