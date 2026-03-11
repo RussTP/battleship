@@ -39,11 +39,10 @@ export default class Display {
             let gameOver = false;
             let isProcessing = false;
 
-    
-
             boardElement.addEventListener('click', (e) => {
             if (!e.target.dataset.row) return;
             if (isProcessing) return;
+            if (player.personBoard.placement.length === 0) return;
             isProcessing = true;
              console.log('clicked', e.target.dataset.row, e.target.dataset.col)
             const row = Number(e.target.dataset.row)
@@ -53,6 +52,7 @@ export default class Display {
             const result = gameboard.receiveAttack(row, col);
             if (typeof result === 'string') {
             document.querySelector('#notification').textContent = `You sunk my ${result}!`;
+
             setTimeout(() => {
                 document.querySelector('#notification').textContent = '';
             }, 2500)

@@ -6,6 +6,7 @@
 
 h1 {
     color: white;
+    margin-right: 5px;
     text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18, 2px 2px 2px rgba(255,23,23,0), 2px 2px 2px rgba(255,23,23,0);
 }
 
@@ -83,22 +84,25 @@ button {
 .cell {
     display: flex;
     aspect-ratio: 1/1;
-    border: 1.5px solid rgb(155, 155, 155);
+    border: 1.5px solid rgb(103, 103, 103);
     background-color: blue;
     background-clip: padding-box;
    
 }
 
 .ship {
-    background-color: rgb(137, 137, 137);
-    z-index: 20;
+background: #0f0f0f;
+background: radial-gradient(circle,rgba(15, 15, 15, 1) 37%, rgba(110, 113, 128, 1) 48%, rgba(0, 0, 0, 0.3) 60%);
 }
 
 .hit {
-    background-color: red;
+background: #ff0000;
+background: radial-gradient(circle,rgba(255, 0, 0, 1) 37%, rgba(125, 51, 51, 1) 50%, rgba(255, 0, 0, 0.3) 60%);
+
 }
 
 .miss {
-    background-color: rgb(143, 204, 235);
+background: #f7f2f2;
+background: radial-gradient(circle,rgba(247, 242, 242, 1) 37%, rgba(14, 101, 232, 1) 48%, rgba(4, 0, 255, 0.3) 60%);
 }
 
