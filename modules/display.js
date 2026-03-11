@@ -35,9 +35,11 @@ export default class Display {
     }
 
      attackBoard(boardElement, gameboard, player) {
-            const controller = new AbortController(); 
+            this.controller = new AbortController(); 
             let gameOver = false;
             let isProcessing = false;
+
+    
 
             boardElement.addEventListener('click', (e) => {
             if (!e.target.dataset.row) return;
@@ -46,17 +48,19 @@ export default class Display {
              console.log('clicked', e.target.dataset.row, e.target.dataset.col)
             const row = Number(e.target.dataset.row)
             const col = Number(e.target.dataset.col);
+
            
             const result = gameboard.receiveAttack(row, col);
             if (typeof result === 'string') {
-            const shipDiv = document.createElement('div');
-            shipDiv.classList.add('shipSunk')
-            shipDiv.textContent = `You sunk my ${result}!`
-            document.body.appendChild(shipDiv);
+            document.querySelector('#notification').textContent = `You sunk my ${result}!`;
+            setTimeout(() => {
+                document.querySelector('#notification').textContent = '';
+            }, 2500)
             }
 
             
             boardElement.innerHTML = '';
+             document.querySelector('#random-ship-btn').disabled = true;
             this.renderBoard(gameboard.grid, gameboard.placement, boardElement, true);
             this.updateCells(boardElement, gameboard.hit, gameboard.miss);
             
@@ -64,7 +68,7 @@ export default class Display {
             if (player.cpuBoard.allSunk()) {
             document.querySelector('#turn-display').textContent = 'You Win!'
             gameOver = true;
-            controller.abort(); 
+            this.controller.abort(); 
             return;    
         } 
             document.querySelector('#turn-display').textContent = `CPU's turn`;
@@ -73,15 +77,15 @@ export default class Display {
              if(gameOver) return;
              if (player.personBoard.allSunk()) {
                 document.querySelector('#turn-display').textContent = 'You Lose!'
-                controller.abort(); 
+                this.controller.abort(); 
         } else {
                 document.querySelector('#turn-display').textContent = `Players turn`;
                  this.cpuTurn(player);
         }
                 isProcessing = false;
-           }, 1000);
+           }, 700);
 
-            }, {signal: controller.signal });
+            }, {signal: this.controller.signal });
         }
 
              updateCells(boardElement, hits, miss) {
@@ -114,6 +118,7 @@ export default class Display {
         resetGame(player) {
             const reset = document.querySelector('#reset-btn'); 
                 reset.addEventListener('click' , () => {
+                    this.controller.abort();
                     player.personBoard.reset();
                     player.cpuBoard.reset();                
                     player.cpuBoard.randomShip(10, 'carrier');
@@ -123,14 +128,17 @@ export default class Display {
 
                     const playerBoard = document.querySelector('#player-board');
                     const cpuBoard = document.querySelector('#cpu-board');
+                    document.querySelector('#notification').textContent = '';
+                    document.querySelector('#random-ship-btn').disabled = false;
                     playerBoard.innerHTML = '';
                     cpuBoard.innerHTML = '';
+    
 
                     this.renderBoard(player.personBoard.grid, player.personBoard.placement, playerBoard);
                     this.renderBoard(player.cpuBoard.grid, player.cpuBoard.placement, cpuBoard, true);
-                    const AbortController = new AbortController(); 
-                    
-                })
+                    document.querySelector('#turn-display').textContent = 'Players turn';
+                    this.handleClick(player);
+                });
             }
         
 
