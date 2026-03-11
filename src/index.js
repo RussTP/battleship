@@ -1,5 +1,5 @@
 import Player from'./player.js';
-import Display from '../modules/display.js';
+import Display from '../docs/display.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const newPlayer = new Player();
